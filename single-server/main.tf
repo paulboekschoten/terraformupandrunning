@@ -2,19 +2,6 @@ provider "aws" {
   region = "eu-west-3"
 }
 
-# variables
-variable "http_port" {
-  description = "Server port for HTTP requests."
-  type = number
-  default = 8080
-}
-
-#outputs
-output "public_ip" {
-  description = "The public ip of the web server."
-  value = aws_instance.tf-running-paul.public_ip
-}
-
 #resources
 resource "aws_instance" "tf-running-paul" {
   ami = "ami-0c6ebbd55ab05f070"
