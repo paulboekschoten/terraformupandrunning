@@ -1,5 +1,5 @@
 variable "http_port" {
   description = "Server port for HTTP requests."
-  type = number
-  default = 8080
+  type        = number
+  default     = 8080
 }
