@@ -28,8 +28,5 @@ override.tf.json
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
 
-# Ignore lock file
-.terraform.lock.hcl
-
 # Ignore apple folder
 .DS_Store
