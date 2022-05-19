@@ -60,27 +60,6 @@ resource "aws_autoscaling_group" "tf-running-paul" {
   }
 }
 
-##auto scaling schedule
-#resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
-#  scheduled_action_name = "scale-out-during-business-hours"
-#  min_size              = 2
-#  max_size              = 10
-#  desired_capacity      = 10
-#  recurrence            = "0 9 * * *"
-#
-#  autoscaling_group_name = module.webserver_cluster.asg_name
-#}
-#
-#resource "aws_autoscaling_schedule" "scale_in_at_night" {
-#  scheduled_action_name = "scale-in-at-night"
-#  min_size              = 2
-#  max_size              = 10
-#  desired_capacity      = 2
-#  recurrence            = "0 17 * * *"
-#
-#  autoscaling_group_name = module.webserver_cluster.asg_name
-#}
-
 # security group instances
 resource "aws_security_group" "tf-instance-paul" {
   name = "terraform-example-paul"
@@ -95,20 +74,26 @@ resource "aws_security_group" "tf-instance-paul" {
 # security group loadbalancer
 resource "aws_security_group" "alb-paul" {
   name = "${var.cluster_name}-alb"
-  # allow all inbound http requests
-  ingress {
-    from_port   = local.http_port
+}
+
+resource "aws_security_group_rule" "allow_http_inbound" {
+  type = "ingress"
+  security_group_id = aws_security_group.alb-paul.id
+
+  from_port   = local.http_port
     to_port     = local.http_port
     protocol    = local.tcp_protocol
     cidr_blocks = local.all_ips
-  }
-  # allow all outbound requests, needed for health checks
-  egress {
-    from_port   = local.any_port
+}
+
+resource "aws_security_group_rule" "allow_all_outbound" {
+  type = "egress"
+  security_group_id = aws_security_group.alb-paul.id
+
+  from_port   = local.any_port
     to_port     = local.any_port
     protocol    = local.any_protocol
     cidr_blocks = local.all_ips
-  }
 }
 
 # loadbalancer
